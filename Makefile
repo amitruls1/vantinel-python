@@ -1,29 +1,29 @@
-.PHONY: install test format lint clean build help build-secure audit
+.PHONY: install test test-unit test-integration format lint type-check clean build publish-test publish check audit help
 
 help:  ## Show this help message
 	@echo "Available commands:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 install:  ## Install package in development mode
-	pip install -e ".[dev]"
+	uv sync --extra dev
 
 test:  ## Run all tests
-	pytest tests/ -v
+	uv run pytest tests/ -v
 
 test-unit:  ## Run unit tests only (skip integration tests)
-	pytest tests/ -v -m "not integration"
+	uv run pytest tests/ -v -m "not integration"
 
 test-integration:  ## Run integration tests only (requires collector running)
-	pytest tests/ -v -m "integration"
+	uv run pytest tests/ -v -m "integration"
 
-format:  ## Format code with black
-	black vantinel_sdk/ tests/ examples/
+format:  ## Format code with ruff
+	uv run ruff format vantinel_sdk/ tests/ examples/
 
 lint:  ## Lint code with ruff
-	ruff check vantinel_sdk/ tests/ examples/
+	uv run ruff check vantinel_sdk/ tests/ examples/
 
 type-check:  ## Run mypy type checker
-	mypy vantinel_sdk/
+	uv run mypy vantinel_sdk/
 
 clean:  ## Clean build artifacts
 	rm -rf build/
@@ -36,41 +36,16 @@ clean:  ## Clean build artifacts
 	find . -type f -name "*.pyc" -delete
 
 build:  ## Build distribution packages
-	python -m build
+	uv build
 
 publish-test:  ## Publish to Test PyPI
-	python -m twine upload --repository testpypi dist/*
+	uv publish --publish-url https://test.pypi.org/legacy/
 
 publish:  ## Publish to PyPI
-	python -m twine upload dist/*
+	uv publish
 
-example-basic:  ## Run basic usage example
-	python examples/basic_usage.py
-
-example-decorator:  ## Run decorator example
-	python examples/decorator_example.py
-
-example-langchain:  ## Run LangChain integration example
-	python examples/langchain_integration.py
-
-example-sampling:  ## Run high-volume sampling example
-	python examples/high_volume_sampling.py
-
-run-examples:  ## Run all examples
-	@echo "Running basic usage..."
-	@python examples/basic_usage.py
-	@echo "\n\nRunning decorator example..."
-	@python examples/decorator_example.py
-	@echo "\n\nRunning high-volume sampling..."
-	@python examples/high_volume_sampling.py
+audit:  ## Run security audit on dependencies
+	uv run pip-audit
 
 check: format lint type-check test-unit  ## Run all checks (format, lint, type-check, tests)
 	@echo "All checks passed!"
-
-build-secure:  ## Build Cython-compiled secure wheel
-	pip install cython
-	python setup_cython.py bdist_wheel
-
-audit:  ## Run security audit on dependencies
-	pip install pip-audit
-	pip-audit

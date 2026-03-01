@@ -7,34 +7,25 @@ on:
 
 jobs:
   publish:
-    name: Publish Python distribution to PyPI
+    name: Publish to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/vantinel-sdk
 
     permissions:
-      id-token: write  # Required for trusted publishing
+      id-token: write  # Required for OIDC trusted publishing
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.12"
-
-      - name: Install build tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
+          version: "latest"
 
       - name: Build package
-        run: python -m build
+        run: uv build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        # Uses OIDC trusted publishing (no token needed if configured)
-        # Fallback: add PYPI_API_TOKEN secret and uncomment below:
-        # with:
-        #   password: ${{ secrets.PYPI_API_TOKEN }}
+        run: uv publish --trusted-publishing always
