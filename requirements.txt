@@ -1,0 +1,10 @@
+# Core dependencies
+httpx>=0.24.0
+tiktoken>=0.5.0
+
+# Development dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+mypy>=1.0.0
+ruff>=0.1.0
