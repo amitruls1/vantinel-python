@@ -54,8 +54,7 @@ async def test_watch_tool_error():
         assert errors == 1
 
 
-@pytest.mark.asyncio
-async def test_decorator_sync():
+def test_decorator_sync():
     """Test decorator with sync function."""
     config = VantinelConfig(
         api_key="test_key", client_id="test_client"
@@ -69,9 +68,9 @@ async def test_decorator_sync():
 
     result = my_sync_tool(5)
     assert result == 10
-    assert await monitor.total_calls() == 1
+    assert asyncio.run(monitor.total_calls()) == 1
 
-    await monitor.close()
+    asyncio.run(monitor.close())
 
 
 @pytest.mark.asyncio
