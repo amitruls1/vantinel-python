@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vantinel-sdk"
-version = "0.4.0-beta"
+version = "0.5.0-beta"
 description = "Lightweight observability and guardrails SDK for AI agents"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
-    {name = "Vantinel Team", email = "team@vantinel.dev"}
+    {name = "Vantinel Team", email = "support@vantinel.com"}
 ]
 keywords = ["observability", "monitoring", "ai", "agents", "guardrails", "llm"]
 classifiers = [
@@ -40,7 +40,7 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/amitruls1/vantinel-python"
-Documentation = "https://docs.vantinel.com"
+Documentation = "https://vantinel.com/docs"
 Repository = "https://github.com/amitruls1/vantinel-python"
 "Bug Tracker" = "https://github.com/amitruls1/vantinel-python/issues"
 Changelog = "https://github.com/amitruls1/vantinel-python/blob/main/CHANGELOG.md"
